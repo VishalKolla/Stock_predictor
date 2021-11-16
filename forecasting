@@ -1,0 +1,33 @@
+# Predicting off of the most recent days from the original DF
+yhat = model.predict(np.array(df.tail(n_per_in)).reshape(1, n_per_in, n_features))
+
+# Transforming the predicted values back to their original format
+yhat = close_scaler.inverse_transform(yhat)[0]
+
+# Creating a DF of the predicted prices
+preds = pd.DataFrame(yhat, 
+                     index=pd.date_range(start=df.index[-1]+timedelta(days=1), 
+                                         periods=len(yhat), 
+                                         freq="B"), 
+                     columns=[df.columns[0]])
+
+# Number of periods back to plot the actual values
+pers = n_per_in
+
+# Transforming the actual values to their original price
+actual = pd.DataFrame(close_scaler.inverse_transform(df[["Close"]].tail(pers)), 
+                      index=df.Close.tail(pers).index, 
+                      columns=[df.columns[0]]).append(preds.head(1))
+
+# Printing the predicted prices
+print(preds)
+
+# Plotting
+plt.figure(figsize=(16,6))
+plt.plot(actual, label="Actual Prices")
+plt.plot(preds, label="Predicted Prices")
+plt.ylabel("Price")
+plt.xlabel("Dates")
+plt.title(f"Forecasting the next {len(yhat)} days")
+plt.legend()
+plt.show()
