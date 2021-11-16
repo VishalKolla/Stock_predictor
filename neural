@@ -1,0 +1,33 @@
+## Creating the NN
+
+# Instatiating the model
+model = Sequential()
+
+# Activation
+activ = "tanh"
+
+# Input layer
+model.add(LSTM(90, 
+               activation=activ, 
+               return_sequences=True, 
+               input_shape=(n_per_in, n_features)))
+
+# Hidden layers
+layer_maker(n_layers=1, 
+            n_nodes=30, 
+            activation=activ)
+
+# Final Hidden layer
+model.add(LSTM(60, activation=activ))
+
+# Output layer
+model.add(Dense(n_per_out))
+
+# Model summary
+model.summary()
+
+# Compiling the data with selected specifications
+model.compile(optimizer='adam', loss='mse', metrics=['accuracy'])
+
+## Fitting and Training
+res = model.fit(X, y, epochs=50, batch_size=128, validation_split=0.1)
