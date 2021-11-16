@@ -1,0 +1,14 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from datetime import timedelta
+import ta
+from sklearn.preprocessing import RobustScaler
+plt.style.use("bmh")
+
+
+from tensorflow.keras import Sequential
+from keras.layers import LSTM, Dense, Dropout
+
+# Loading in the Data
+df = pd.read_csv("drive/MyDrive/Colab Notebooks/AMD.csv")
