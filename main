@@ -1,0 +1,34 @@
+df['Date'] = pd.to_datetime(df.Date)
+
+# Setting the index
+df.set_index('Date', inplace=True)
+
+# Dropping any NaNs
+df.dropna(inplace=True)
+
+
+
+## Technical Indicators
+
+# Adding all the indicators
+df = ta.add_all_ta_features(df, open="Open", high="High", low="Low", close="Close", volume="Volume", fillna=True)
+
+# Dropping everything else besides 'Close' and the Indicators
+df.drop(['Open', 'High', 'Low', 'Adj Close', 'Volume'], axis=1, inplace=True)
+
+# Only using the last 1000 days of data to get a more accurate representation of the current market climate
+df = df.tail(1000)
+
+
+
+## Scaling
+
+# Scale fitting the close prices separately for inverse_transformations purposes later
+close_scaler = RobustScaler()
+
+close_scaler.fit(df[['Close']])
+
+# Normalizing/Scaling the DF
+scaler = RobustScaler()
+
+df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns, index=df.index)
