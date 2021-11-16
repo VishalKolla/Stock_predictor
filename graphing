@@ -1,0 +1,25 @@
+# Transforming the actual values to their original price
+actual = pd.DataFrame(close_scaler.inverse_transform(df[["Close"]]), 
+                      index=df.index, 
+                      columns=[df.columns[0]])
+
+# Getting a DF of the predicted values to validate against
+predictions = validater(n_per_in, n_per_out)
+
+# Printing the RMSE
+print("RMSE:", val_rmse(actual, predictions))
+    
+# Plotting
+plt.figure(figsize=(16,6))
+
+# Plotting those predictions
+plt.plot(predictions, label='Predicted')
+
+# Plotting the actual values
+plt.plot(actual, label='Actual')
+
+plt.title(f"Predicted vs Actual Closing Prices")
+plt.ylabel("Price")
+plt.legend()
+plt.xlim('2018-07', '2020-05')
+plt.show()
